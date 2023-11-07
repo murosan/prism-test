@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prism.js + HOCON sample</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div>
+      <pre><code class="language-hocon">
+// comment
+# comment
+not.a.comment = [
+  "inside"
+  "//quoted",
+  "#string"
+]//comment
+
+arr=[1,2 3]
+
+"fo:o": { "a" : 42 },
+"f$oo" : [null, true, false],
+"foo	" : { "b" : 43 }
+
+"foo" : { "a" : 42, "b" : 1e5 }
+
+a b c : 42 // "a b c" is a valid key but not highlighted properly
+"a b c" : 43
+
+without_colon { a: 100 }
+
+obj = {
+  aaa.bbb = 100
+  ccc.ddd = [200 300]
+  eee.fff {
+    ggg.hhh: xxxx
+  }
+}
+
+multiline = """"
+" aaa
+bbb
+"""
+
+"""
+multilinekey
+""": val
+
+data-center-generic = { cluster-size = 6 }
+data-center-east = ${data-center-generic} { name = "ea:st" }
+
+path = [ /bin ]
+path = ${?path} [ /usr/bin ]
+path += /usr/local/bin
+path -= /usr/sbin // "path -" is a valid key
+
+included {
+  include
+    "another.conf"
+}
+
+;;;|||¥¥¥--- = ok
+
+include file("aaa.conf")
+include url("file://bbb.conf")
+include classpath("ccc.conf")
+include required("ddd.conf")
+</code></pre>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script>
+      Prism.languages.hocon = {
+        property: [
+          /(?:[\w\-]|[^:\+.\[\]{}="$\s\r\n]+)/,
+          /"(?:\\.|[^"\r\n]*)"/,
+        ].map(r => ({
+          pattern: new RegExp(r.source + '(?=\\s*(?:[\\.:={]|\\+=))'),
+          lookbehind: true,
+          greedy: true,
+        })),
+        string: [
+          { pattern: /"""[\s\S]*?"""/, greedy: true },
+          {
+            pattern: /(^|[^\\])"(?:\\.|[^"\\\r\n])*"/,
+            lookbehind: true,
+            greedy: true,
+          },
+        ],
+        comment: { pattern: /(\/\/|#).*/, greedy: true },
+        punctuation: /[\${}\[\],]/,
+        operator: /[:=]/,
+        keyword: {
+          pattern: /(?:^|\s)include(?=\s)/,
+          lookbehind: true,
+          greedy: true,
+        },
+        function: {
+          pattern: /(?:^|\s)(file|url|classpath|required)(?=\()/,
+          greedy: true,
+        },
+      }
+    </script>
+  </body>
+</html>
