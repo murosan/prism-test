@@ -76,7 +76,7 @@ include required("ddd.conf")
     <script>
       Prism.languages.hocon = {
         property: [
-          /(?:[\w\-]|[^:\+.\[\]{}="$\s\r\n]+)/,
+          /(?:[\w\-]|[^:\/\+.\[\]{}="$\s\r\n]+)/,
           /"(?:\\.|[^"\r\n]*)"/,
         ].map(r => ({
           pattern: new RegExp(r.source + '(?=\\s*(?:[\\.:={]|\\+=))'),

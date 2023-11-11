@@ -7,7 +7,7 @@ https://murosan.github.io/prism-test/hocon.html
 
 ```js
 Prism.languages.hocon = {
-  property: [/(?:[\w\-]|[^:\+.\[\]{}="$\s\r\n]+)/, /"(?:\\.|[^"\r\n]*)"/].map(
+  property: [/(?:[\w\-]|[^:\/\+.\[\]{}="$\s\r\n]+)/, /"(?:\\.|[^"\r\n]*)"/].map(
     r => ({
       pattern: new RegExp(r.source + '(?=\\s*(?:[\\.:={]|\\+=))'),
       lookbehind: true,
